@@ -1,0 +1,23 @@
+nome: nodeCI
+
+on: 
+  push: 
+    branchs:
+      - main
+    pull_request:
+      branchs:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-lastest
+    steps:
+    -uses: actions/checkout@v3
+    -name: Set up Node.jobs
+    uses: actions/setups-node@v3
+    with:
+    node-version: '18'
+    -name: install dependencies
+    run: npm install
+    -name: Run tests
+    run: npm test
