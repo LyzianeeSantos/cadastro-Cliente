@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  cadastro-api:
+    build: .
+    container_name: cadastro-api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    networks:
+      - monitoramento
+
+  postgres:
+    image: postgres:15
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: cadastro_clientes
+    ports:
+      - "5432:5432"
+    networks:
+      - monitoramento
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - monitoramento
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3001:3000"
+    networks:
+      - monitoramento
+
+networks:
+  monitoramento:

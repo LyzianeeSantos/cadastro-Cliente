@@ -1,8 +1,37 @@
 const express = require("express");
 const prisma = require("./db");
+const client = require('prom-client');
 const app = express();
 
 app.use(express.json());
+
+// ------- Prometheus metrics setup -------
+const collectDefaultMetrics = client.collectDefaultMetrics;
+collectDefaultMetrics({ timeout: 5000 });
+
+const httpRequestCounter = new client.Counter({
+  name: 'http_requests_total',
+  help: 'Total number of HTTP requests',
+  labelNames: ['method', 'route', 'statusCode'],
+});
+
+const httpRequestDuration = new client.Histogram({
+  name: 'http_request_duration_seconds',
+  help: 'Duration of HTTP requests in seconds',
+  labelNames: ['method', 'route', 'statusCode'],
+  buckets: [0.005, 0.01, 0.05, 0.1, 0.3, 0.5, 1, 2, 5],
+});
+
+app.use((req, res, next) => {
+  const end = httpRequestDuration.startTimer();
+  res.on('finish', () => {
+    const route = req.route && req.route.path ? req.route.path : req.path;
+    httpRequestCounter.labels(req.method, route, String(res.statusCode)).inc();
+    end({ method: req.method, route, statusCode: res.statusCode });
+  });
+  next();
+});
+
 
 // Criar cliente
 app.post("/clientes", async (req, res) => {
@@ -21,6 +50,15 @@ app.post("/clientes", async (req, res) => {
 app.get("/clientes", async (req, res) => {
   const clientes = await prisma.cliente.findMany();
   res.json(clientes);
+});
+
+app.get('/metrics', async (req, res) => {
+  try {
+    res.set('Content-Type', client.register.contentType);
+    res.end(await client.register.metrics());
+  } catch (ex) {
+    res.status(500).end(ex);
+  }
 });
 
 // Buscar cliente por id
