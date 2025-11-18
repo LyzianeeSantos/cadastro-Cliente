@@ -1,0 +1,183 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": null,
+  "iteration": 1656710000000,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "showPoints": "never",
+        "spanNulls": true
+      },
+      "targets": [
+        {
+          "expr": "rate(process_cpu_user_seconds_total[1m]) * 100",
+          "legendFormat": "Node.js CPU (%)",
+          "refId": "A"
+        }
+      ],
+      "title": "CPU do Node.js (%)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 2,
+      "options": {},
+      "targets": [
+        {
+          "expr": "process_resident_memory_bytes",
+          "legendFormat": "RSS Memory",
+          "refId": "A"
+        }
+      ],
+      "title": "Uso de Memória do Node.js",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 3,
+      "options": {},
+      "targets": [
+        {
+          "expr": "sum(rate(http_requests_total[1m]))",
+          "legendFormat": "Request/s",
+          "refId": "A"
+        }
+      ],
+      "title": "Requisições por Segundo (RPS)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 4,
+      "options": {},
+      "targets": [
+        {
+          "expr": "sum(http_requests_total)",
+          "legendFormat": "Total Requests",
+          "refId": "A"
+        }
+      ],
+      "title": "Total de Requisições HTTP",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 5,
+      "targets": [
+        {
+          "expr": "rate(process_open_fds[1m])",
+          "legendFormat": "File Descriptors",
+          "refId": "A"
+        }
+      ],
+      "title": "File Descriptors do Node.js",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "id": 6,
+      "targets": [
+        {
+          "expr": "nodejs_eventloop_lag_seconds",
+          "legendFormat": "Event Loop Lag",
+          "refId": "A"
+        }
+      ],
+      "title": "Atraso do Event Loop (Latência)",
+      "type": "timeseries"
+    }
+  ],
+  "schemaVersion": 30,
+  "style": "dark",
+  "tags": ["nodejs", "prometheus"],
+  "timezone": "",
+  "title": "Node.js Observability Dashboard",
+  "version": 1
+}
